@@ -1,0 +1,324 @@
+{
+  "id": "8f2c1b40-6d7a-4e19-9b3c-5a1e7d0c4f11",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        320
+      ],
+      "size": [
+        340,
+        314
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        340,
+        82
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "krea2_turbo_fp8_scaled.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        160
+      ],
+      "size": [
+        340,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_4b_fp8_scaled.safetensors",
+        "krea2",
+        "default"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        680
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "qwen_image_vae.safetensors"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "SkinDetailer",
+      "pos": [
+        440,
+        40
+      ],
+      "size": [
+        420,
+        640
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 4
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "skin_mask",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SkinDetailer"
+      },
+      "widgets_values": [
+        "texture + diffusion (experimental)",
+        "auto (ClearReality photo detail)",
+        0.8,
+        0.5,
+        "auto (sam3.1_multiplex_fp16)",
+        0.45,
+        0,
+        12.0,
+        0,
+        "randomize",
+        8,
+        1.0,
+        0.22,
+        0.85,
+        "photorealistic skin with natural pore-level texture, smooth even skin tone, soft subsurface scattering, clean sharp detail",
+        "euler",
+        "simple",
+        "auto",
+        0.5,
+        0.15,
+        1,
+        1.5,
+        0.65
+      ]
+    },
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": [
+        920,
+        40
+      ],
+      "size": [
+        500,
+        540
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 5
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "SkinDetailer"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      2,
+      0,
+      5,
+      1,
+      "MODEL"
+    ],
+    [
+      3,
+      3,
+      0,
+      5,
+      2,
+      "CLIP"
+    ],
+    [
+      4,
+      4,
+      0,
+      5,
+      3,
+      "VAE"
+    ],
+    [
+      5,
+      5,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Krea 2 Turbo loaders (swap for any MODEL/CLIP/VAE)",
+      "bounding": [
+        20,
+        -20,
+        380,
+        790
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.85,
+      "offset": [
+        60,
+        40
+      ]
+    },
+    "note": "EXPERIMENTAL diffusion mode. Krea 2 Turbo: steps 8, cfg 1.0. The VAE MUST match the diffusion model - a near-miss VAE decodes coherently while destroying fine skin detail. For Krea 2 Raw use steps 52, cfg 3.5."
+  },
+  "version": 0.4
+}
